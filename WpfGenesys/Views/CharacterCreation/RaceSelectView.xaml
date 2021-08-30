@@ -1,0 +1,115 @@
+﻿<Page x:Class="WpfGenesys.Views.CharacterCreation.RaceSelectView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfGenesys.Views.CharacterCreation"
+      xmlns:src="clr-namespace:WpfGenesys.Data"
+      xmlns:models="clr-namespace:WpfGenesys.Models"
+      xmlns:c="clr-namespace:WpfGenesys.Common"
+      xmlns:ctrl="clr-namespace:WpfGenesys.Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="RaceSelectView">
+    <Page.Resources>
+        <src:RaceData x:Key="RaceList"/>
+        <c:PercentageConverter x:Key="PercentageConverter"/>
+
+        <!--<DataTemplate DataType="{x:Type models:Characteristics}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <TextBlock Text="{Binding Path=Brawn}"/>
+                    <TextBlock Text="Hi"/>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <TextBlock Text="{Binding Path=Agility}"/>
+                </Grid>
+                <Grid Grid.Column="2">
+                    <TextBlock Text="{Binding Path=Intellect}"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>-->
+    </Page.Resources>
+    <!--Note that multiple ScrollViewers break the mousewheel's scrolling-->
+    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" CanVerticallyScroll="False" CanHorizontallyScroll="False">
+                <TextBlock Text="Select Species/Archetype"
+                           FontSize="16"/>
+                <TextBlock x:Name="DebugTextBox"/>
+            </StackPanel>
+            <ScrollViewer Grid.Row="1" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
+                          VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" PreviewMouseLeftButtonDown="InnerScrollViewer_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="InnerScrollViewer_PreviewMouseLeftButtonUp">
+                <StackPanel Orientation="Horizontal" Grid.Row="1"
+                            x:Name="SpeciesStackPanel">
+                    <Button x:Name="NewSpeciesButton"
+                            Width="185" Click="NewSpeciesButton_Click">
+                        <Path Width="30" Height="30"
+                              Stroke="Black" StrokeThickness="1" Fill="#888"
+                              Data="M12,0 h6 v12 h12 v6 h-12 v12 h-6 v-12 h-12 v-6 h12 v-12 z"/>
+                    </Button>
+                </StackPanel>
+            </ScrollViewer>
+            <ScrollViewer Grid.Row="2" 
+                          VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" PreviewMouseLeftButtonDown="InnerScrollViewer_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="InnerScrollViewer_PreviewMouseLeftButtonUp">
+                <StackPanel Orientation="Horizontal" Grid.Row="2"
+                            x:Name="SubSpeciesStackPanel"/>
+            </ScrollViewer>
+
+
+        </Grid>
+    </ScrollViewer>
+
+    <!--<StackPanel.Resources>
+                <ObjectDataProvider x:Key="ObjData" ObjectType="{x:Type src:RaceData}" MethodName="RaceData"/>
+                <DataTemplate x:Key="ObjLayout" DataType="{x:Type src:Race}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </StackPanel.Resources>-->
+
+        <!--<ListBox Visibility="Collapsed"
+                 x:Name="RaceListBox"
+                 Grid.Row="1"
+                 ItemsSource="{Binding Source={StaticResource RaceList}}"
+                 ItemTemplateSelector="{Binding}"
+                 IsSynchronizedWithCurrentItem="True"
+                 VerticalContentAlignment="Stretch">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Margin" Value="5,10"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Width="{Binding ElementName=RaceListBox, Path=ActualWidth}"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate x:Name="RaceBlock" DataType="{x:Type models:Race}">
+                    <ctrl:RaceBlockControl/>
+                    
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>-->
+
+
+
+</Page>

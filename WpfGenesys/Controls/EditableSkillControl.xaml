@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="WpfGenesys.Controls.EditableSkillControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfGenesys.Controls"
+             xmlns:c="clr-namespace:WpfGenesys.Common"
+             xmlns:md="clr-namespace:WpfGenesys.Models"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="280"
+             d:DataContext="{x:Type md:Skills}">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="Border">
+                <Setter Property="Margin" Value="5,0,0,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <ObjectDataProvider ObjectType="{x:Type md:Skills}" MethodName="GetNames" x:Key="GetSkillNames"/>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition MinWidth="100"/>
+            <ColumnDefinition MinWidth="30" Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Margin="0">
+            <CheckBox x:Name="CareerCheckbox"/>
+        </Border>
+        <Border Grid.Column="1">
+            <ComboBox x:Name="SkillCombobox"
+                      ItemsSource="{Binding Source={StaticResource GetSkillNames}}"
+                      IsSynchronizedWithCurrentItem="True">
+                
+            </ComboBox>
+        </Border>
+        <Border Grid.Column="2">
+            <TextBox x:Name="RankBox">
+                <TextBox.Text>
+                    <Binding Path=".">
+                        <Binding.ValidationRules>
+                            <c:IntegerRule Max="2" ValidatesOnTargetUpdated="True"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </Border>
+    </Grid>
+</UserControl>

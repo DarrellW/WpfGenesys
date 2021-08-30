@@ -1,0 +1,266 @@
+﻿<UserControl x:Class="WpfGenesys.Controls.RaceBlockControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:md="clr-namespace:WpfGenesys.Models"
+             xmlns:c="clr-namespace:WpfGenesys.Common"
+             xmlns:ctrl="clr-namespace:WpfGenesys.Controls"
+             d:DataContext="{d:DesignInstance Type=md:Race}"
+             mc:Ignorable="d"
+             d:DesignHeight="350" d:DesignWidth="200">
+    <UserControl.Resources>
+        <c:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <c:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
+        <c:CountANDBoolToVisibilityConverter x:Key="CountANDBoolToVisibilityConverter"/>
+        <c:ObjectNotNullVisibilityConverter x:Key="ObjectNotNullVisibilityConverter"/>
+        <c:MultiIntToPointConverter x:Key="MultiIntToPointConverter"/>
+        <c:AddMultiConverter x:Key="Add"/>
+        <c:SubtractMultiConverter x:Key="Subtract"/>
+        <c:ScaleMultiConverter x:Key="Scale"/>
+        <c:PercentageConverter x:Key="PercentageConverter"/>
+    </UserControl.Resources>
+    
+    <Border CornerRadius="5" Width="185">
+        <Grid Background="Transparent" x:Name="RaceBlockGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <!--#region Species Name, Exp-->
+            <Border Grid.Row="0" CornerRadius="5" BorderBrush="Black" BorderThickness="1,1,1,1">
+                <DockPanel Margin="5,0" LastChildFill="False">
+                    <TextBlock Text="{Binding Path=Name}"/>
+                    <TextBlock DockPanel.Dock="Right" Text=" XP"/>
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding Path=StartingExperience}"/>
+                </DockPanel>
+            </Border>
+            <!--#endregion-->
+
+            <!--#region Characteristics-->
+            <UniformGrid Grid.Row="1" Columns="3" Rows="2">
+                <UniformGrid.Resources>
+                    <Style TargetType="Grid">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                    <Style TargetType="Canvas">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                    </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="10"/>
+                        <Setter Property="Padding" Value="0"/>
+                    </Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="20"/>
+                        <Setter Property="Margin" Value="8"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Foreground" Value="#240"/>
+                    </Style>
+                    <Style TargetType="Ellipse">
+                        <Setter Property="Margin" Value="3"/>
+                        <Setter Property="Fill" Value="#effeee"/>
+                        <Setter Property="Stroke" Value="#000"/>
+                        <Setter Property="StrokeThickness" Value="3"/>
+                        <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"/>
+                    </Style>
+                </UniformGrid.Resources>
+
+                <!--<DockPanel LastChildFill="False">
+                    <Label DockPanel.Dock="Top" Content="Brawn" />
+                    <Grid DockPanel.Dock="Bottom" Name="BrawnGrid">
+                        <Ellipse/>
+                        
+                        <Path Stroke="Black" StrokeThickness="0.03">
+                            <Path.RenderTransform>
+                                <ScaleTransform ScaleX="{Binding ElementName=BrawnGrid, Path=ActualHeight}"
+                                                                    ScaleY="{Binding ElementName=BrawnGrid, Path=ActualHeight}"/>
+
+                            </Path.RenderTransform>
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure StartPoint="0.69,0.05">
+                                        <ArcSegment SweepDirection="Clockwise" Size="0.5,0.5" Point="0.69,0.95"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+                        <TextBlock Visibility="{Binding ParentRace, Converter={StaticResource ObjectNotNullVisibilityConverter}}"
+                                   Text="{Binding ParentRace.BaseCharacteristics.Brawn}"/>
+                        <TextBlock Text="{Binding BaseCharacteristics.Brawn}"/>
+                    </Grid>
+                </DockPanel>-->
+                <ctrl:EditableCharacteristicControl x:Name="BrawnCharacteristic"
+                                                    CharacteristicName="BRAWN"
+                                                    CharacteristicValue="{Binding BaseCharacteristics.Brawn}"
+                                                    SizeX="{Binding RelativeSource={RelativeSource AncestorType=UniformGrid}, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.333}"/>
+                <ctrl:EditableCharacteristicControl CharacteristicName="AGILITY"
+                                                    CharacteristicValue="{Binding BaseCharacteristics.Agility}"
+                                                    SizeX="{Binding ElementName=BrawnCharacteristic, Path=SizeX}"/>
+                <ctrl:EditableCharacteristicControl CharacteristicName="INTELLECT"
+                                                    CharacteristicValue="{Binding BaseCharacteristics.Intellect}"
+                                                    SizeX="{Binding ElementName=BrawnCharacteristic, Path=SizeX}"
+                                                    VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <ctrl:EditableCharacteristicControl CharacteristicName="CUNNING"
+                                                    CharacteristicValue="{Binding BaseCharacteristics.Cunning}"
+                                                    SizeX="{Binding ElementName=BrawnCharacteristic, Path=SizeX}"/>
+                <ctrl:EditableCharacteristicControl CharacteristicName="WILL"
+                                                    CharacteristicValue="{Binding BaseCharacteristics.Willpower}"
+                                                    SizeX="{Binding ElementName=BrawnCharacteristic, Path=SizeX}"/>
+                <ctrl:EditableCharacteristicControl CharacteristicName="PRESENCE"
+                                                    CharacteristicValue="{Binding BaseCharacteristics.Presence}"
+                                                    SizeX="{Binding ElementName=BrawnCharacteristic, Path=SizeX}"/>
+                <!--<DockPanel LastChildFill="False">
+                    <Label DockPanel.Dock="Top" Content="Cunning"/>
+                    <Grid DockPanel.Dock="Bottom">
+                        <Ellipse/>
+                        <TextBlock Visibility="{Binding ParentRace, Converter={StaticResource ObjectNotNullVisibilityConverter}}"
+                                   Text="{Binding ParentRace.BaseCharacteristics.Cunning}"/>
+                        <TextBlock Text="{Binding BaseCharacteristics.Cunning}"/>
+                    </Grid>
+                </DockPanel>
+                <DockPanel LastChildFill="False">
+                    <Label DockPanel.Dock="Top" Content="Will"/>
+                    <Grid DockPanel.Dock="Bottom">
+                        <Ellipse/>
+                        <TextBlock Visibility="{Binding ParentRace, Converter={StaticResource ObjectNotNullVisibilityConverter}}"
+                                   Text="{Binding ParentRace.BaseCharacteristics.Willpower}"/>
+                        <TextBlock Text="{Binding BaseCharacteristics.Willpower}"/>
+                    </Grid>
+                </DockPanel>
+                <DockPanel LastChildFill="False">
+                    <Label DockPanel.Dock="Top" Content="Presence"/>
+                    <Grid DockPanel.Dock="Bottom">
+                        <Ellipse/>
+                        <TextBlock Visibility="{Binding ParentRace, Converter={StaticResource ObjectNotNullVisibilityConverter}}"
+                                   Text="{Binding ParentRace.BaseCharacteristics.Presence}"/>
+                        <TextBlock Text="{Binding BaseCharacteristics.Presence}"/>
+                    </Grid>
+                </DockPanel>-->
+            </UniformGrid>
+            <!--#endregion-->
+
+            <!--#region Wound+Strain-->
+            <WrapPanel Grid.Row="2">
+                <TextBlock Name="StrainThresholdLabel"
+                                                MinWidth="{Binding ElementName=WoundThresholdLabel, Path=ActualWidth}"
+                                                Text="Strain Threshold: "/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="BaseStrainValue"
+                                                    MinWidth="{Binding ElementName=BaseWoundValue, Path=ActualWidth}"
+                                                    TextAlignment="Right"
+                                                    Text="{Binding BaseStrainThreshold}"/>
+                    <TextBlock Text=" + Will"/>
+                </StackPanel>
+            </WrapPanel>
+            <WrapPanel Grid.Row="3">
+                <TextBlock Name="WoundThresholdLabel"
+                                                MinWidth="{Binding ElementName=StrainThresholdLabel, Path=ActualWidth}"
+                                                Text="Wound Threshold: "/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="BaseWoundValue"
+                                                    MinWidth="{Binding ElementName=BaseStrainValue, Path=ActualWidth}"
+                                                    TextAlignment="Right"
+                                                    Text="{Binding BaseWoundThreshold}"/>
+                    <TextBlock Text=" + Brawn"/>
+                </StackPanel>
+            </WrapPanel>
+            <!--#endregion-->
+
+            <StackPanel Grid.Row="4">
+                <StackPanel Visibility="{Binding Path=HasNoSubRaces, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <!--#region Racial Skills-->
+                    <Label Visibility="{Binding ElementName=RacialSkillsContainer, Path=Visibility}"
+                           Margin="0,3,0,0" Padding="6,0" FontSize="11"
+                           Content="Racial Skills:"/>
+                    <Border Name="RacialSkillsContainer"
+                            Visibility="{Binding Path=HasRacialSkills, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Padding="5,2" CornerRadius="5" BorderBrush="#777" BorderThickness="1">
+                        <ItemsControl ItemsSource="{Binding RacialSkills}"
+                                      HorizontalContentAlignment="Stretch">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Left"  Text="{Binding Name}"/>
+                                        <TextBlock DockPanel.Dock="Left" Text=":"/>
+                                        
+                                        <TextBlock Visibility="{Binding Path=IsCareer, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                   DockPanel.Dock="Right" HorizontalAlignment="Right" TextAlignment="Right"
+                                                   Text="Career"/>
+
+                                        <TextBlock DockPanel.Dock="Right" Text="|">
+                                            <TextBlock.Visibility>
+                                                <MultiBinding Converter="{StaticResource CountANDBoolToVisibilityConverter}">
+                                                    <Binding Path="IsCareer"/>
+                                                    <Binding Path="Rank"/>
+                                                </MultiBinding>
+                                            </TextBlock.Visibility>
+                                        </TextBlock>
+                                        <TextBlock Visibility="{Binding Path=Rank, Converter={StaticResource CountToVisibilityConverter}}"
+                                                   DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                                                    TextAlignment="Right"
+                                                                    Text="{Binding Rank}"/>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                    <!--#endregion-->
+                    <!--#region Racial Abilities-->
+                    <Label Visibility="{Binding ElementName=RacialAbilitiesContainer, Path=Visibility}"
+                                           Margin="0,3,0,0" Padding="6,0" FontSize="11"
+                                           Content="Racial Abilities:"/>
+                    <Border Name="RacialAbilitiesContainer"
+                            Visibility="{Binding Path=HasRacialAbilities, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Padding="5,2" CornerRadius="5" BorderBrush="#777" BorderThickness="1">
+                        <ItemsControl ItemsSource="{Binding RacialAbilities}"
+                                      HorizontalContentAlignment="Stretch"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Rectangle Height="1" Fill="#777" Margin="5,0" Name="LineSeparator"/>
+                                        <TextBlock Text="{Binding Path=.}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <DataTemplate.Triggers>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed" TargetName="LineSeparator"/>
+                                        </Trigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                    <!--#endregion-->
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding Path=HasSubRaces, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                    <TextBlock TextWrapping="Wrap">
+                                        <Run Text="Each type of"/>
+                                        <Run Text="{Binding Name, Mode=OneTime}"/>
+                                        <Run Text="has its own special abilities..."/>
+                    </TextBlock>
+                    <Path Margin="0,5,0,0" HorizontalAlignment="Center" Stroke="Black" StrokeThickness="2" Data="m0,0 4,4 4,-4"/>
+                    <!-- Code for a dropdown
+                    <ComboBox x:Name="SubRaceSelector" ItemsSource="{Binding SubRaces}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>-->
+                </StackPanel>
+
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

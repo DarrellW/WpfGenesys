@@ -1,0 +1,12 @@
+﻿<Application x:Class="WpfGenesys.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Views/Home/Window2.xaml">
+    <Application.Resources>
+        <Style x:Key="RoundButton" TargetType="Border">
+            <Setter Property="CornerRadius" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+            <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+            <!--<Setter Property="Margin" Value="{Binding Tag, Converter={StaticResource }}"-->
+        </Style>
+    </Application.Resources>
+</Application>

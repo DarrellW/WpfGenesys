@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Anonymous2.svg" />
+    <None Remove="path46.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Anonymous2.svg" />
+    <Resource Include="path46.png" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,608 @@
+﻿<Page x:Class="WpfGenesys.Views.CharacterCreation.CustomRaceView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfGenesys.Views.CharacterCreation"
+      xmlns:md="clr-namespace:WpfGenesys.Models"
+      xmlns:c="clr-namespace:WpfGenesys.Common"
+      xmlns:ctrl="clr-namespace:WpfGenesys.Controls"
+      d:DataContext="{d:DesignInstance Type=local:CustomRaceViewModel}"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="CustomRaceView">
+    <Page.Resources>
+        <c:IntegerToVisibilityConverter x:Key="HideWhenZeroConverter"/>
+        <c:BooleanToVisibilityConverter x:Key="BooleanToInvisibilityConverter"
+                                        True="Collapsed" False="Visible"/>
+        <Style TargetType="TextBox" x:Key="ErrorTooltip">
+
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+    <Border CornerRadius="5" Width="280">
+        <Grid Background="Transparent" x:Name="RaceBlockGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            
+            <!--#region Species Name, Exp-->
+            <Border Grid.Row="0" CornerRadius="5" BorderBrush="Black" BorderThickness="1,1,1,1">
+                <Border.Resources>
+                    <Style TargetType="TextBox" BasedOn="{StaticResource ErrorTooltip}"/>
+                </Border.Resources>
+                
+                <DockPanel Margin="5,0" LastChildFill="False">
+                    <TextBlock Text="Name" Margin="0,0,5,0"/>
+                    <TextBox MaxLines="1" MinWidth="150">
+                        <TextBox.Text>
+                            <Binding Mode="OneWayToSource" Path="Name" TargetNullValue="2">
+                                <Binding.ValidationRules>
+                                    <c:TextValidationRule MaxLength="20" ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <TextBlock DockPanel.Dock="Right" Text=" XP"/>
+                    <TextBox MaxLines="1" DockPanel.Dock="Right" MinWidth="50">
+                        <TextBox.Text>
+                            <Binding Mode="OneWayToSource" Path="StartingExperience" TargetNullValue="90">
+                                <Binding.ValidationRules>
+                                    <c:IntegerRule Max="150" ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </DockPanel>
+            </Border>
+            <!--#endregion-->
+
+            <!--#region Characteristics-->
+            <UniformGrid Grid.Row="1" Columns="3" Rows="2">
+                <UniformGrid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="0,5"/>
+                        <Setter Property="FontSize" Value="13"/>
+                    </Style>
+
+                    <Style TargetType="TextBox" BasedOn="{StaticResource ErrorTooltip}">
+                        <Setter Property="Height" Value="40"/>
+                        <Setter Property="Width" Value="40"/>
+                        <Setter Property="Margin" Value="10,0"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="TextAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+                        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
+
+                        <EventSetter Event="GotFocus" Handler="Characteristic_GotFocus"/>
+                        <EventSetter Event="LostFocus" Handler="Characteristic_LostFocus"/>
+                        <EventSetter Event="PreviewLostKeyboardFocus" Handler="TextBox_PreviewLostKeyboardFocus"/>
+                        <EventSetter Event="GotMouseCapture" Handler="Characteristic_GotMouseCapture"/>
+                        <EventSetter Event="GotKeyboardFocus" Handler="Characteristic_GotKeyboardFocus"/>
+
+                        <!--<Setter Property="Validation.ErrorTemplate">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Border BorderBrush="Red" BorderThickness="1" CornerRadius="20">
+                                        <AdornedElementPlaceholder />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>-->
+                        <Style.Triggers>
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter Property="BorderBrush" Value="Red"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </UniformGrid.Resources>
+
+                <StackPanel>
+                    <TextBlock Text="Brawn"/>
+                    <TextBox x:Name="BrawnBox">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.Text>
+                            <Binding Path="Brawn"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Left">
+                    <TextBlock Text="Agility"/>
+                    <TextBox x:Name="AgilityBox">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.Text>
+                            <Binding Path="Agility"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Left">
+                    <TextBlock Text="Intellect"/>
+                    <TextBox x:Name="IntellectBox">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.Text>
+                            <Binding Path="Intellect"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Right">
+                    <TextBlock Text="Cunning"/>
+                    <TextBox x:Name="CunningBox">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.Text>
+                            <Binding Path="Cunning"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Right">
+                    <TextBlock Text="Willpower"/>
+                    <TextBox x:Name="WillpowerBox">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.Text>
+                            <Binding Path="Willpower"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Right">
+                    <TextBlock Text="Presence"/>
+                    <TextBox x:Name="PresenceBox">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.Text>
+                            <Binding Path="Presence"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+                
+                <!--
+                        <Path Stroke="Black" StrokeThickness="0.05">
+                            <Path.RenderTransform>
+                                <ScaleTransform ScaleX="{Binding ElementName=BrawnGrid, Path=ActualWidth}"
+                                                                ScaleY="{Binding ElementName=BrawnGrid, Path=ActualHeight}"/>
+
+                            </Path.RenderTransform>
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure StartPoint="0.5,0">
+                                        <ArcSegment SweepDirection="Clockwise" Size="0.5,0.5" Point="0.5,1"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+                -->
+                <!--<DockPanel LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Top" Text="Agility"/>
+                    <Grid DockPanel.Dock="Bottom">
+                        <Ellipse/>
+                        <TextBlock Text="{Binding Agility}" Style="{Binding Source={StaticResource CharacteristicNo}}"/>
+                    </Grid>
+                </DockPanel>
+                <DockPanel LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Top" Text="Intellect"/>
+                    <Grid DockPanel.Dock="Bottom">
+                        <Ellipse/>
+                        <TextBlock Text="{Binding Intellect}" Style="{Binding Source={StaticResource CharacteristicNo}}"/>
+                    </Grid>
+                </DockPanel>
+                <DockPanel LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Top" Text="Cunning"/>
+                    <Grid DockPanel.Dock="Bottom">
+                        <Ellipse/>
+                        <TextBlock Text="{Binding Cunning}" Style="{Binding Source={StaticResource CharacteristicNo}}"/>
+                    </Grid>
+                </DockPanel>
+                <DockPanel LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Top" Text="Will"/>
+                    <Grid DockPanel.Dock="Bottom">
+                        <Ellipse/>
+                        <TextBlock Text="{Binding Willpower}" Style="{Binding Source={StaticResource CharacteristicNo}}"/>
+                    </Grid>
+                </DockPanel>
+                <DockPanel LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Top" Text="Presence"/>
+                    <Grid DockPanel.Dock="Bottom">
+                        <Ellipse/>
+                        <TextBlock Text="{Binding Presence}" Style="{Binding Source={StaticResource CharacteristicNo}}"/>
+                    </Grid>
+                </DockPanel>-->
+            </UniformGrid>
+            <!--#endregion-->
+
+            <!--#region Wound+Strain-->
+            <DockPanel Grid.Row="2">
+                <DockPanel.Resources>
+                    <Style TargetType="TextBox" BasedOn="{StaticResource ErrorTooltip}"/>
+                </DockPanel.Resources>
+                
+                <TextBlock Text="Strain Threshold: "/>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBox TextAlignment="Right" MinWidth="50">
+                        <TextBox.Text>
+                            <Binding Path="BaseStrainThreshold" Mode="OneWayToSource" TargetNullValue="10"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <c:IntegerRule Max="20" ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <TextBlock Text=" + Will" Width="{Binding ElementName=_plusBrawn, Path=ActualWidth}"/>
+                </StackPanel>
+            </DockPanel>
+            <DockPanel Grid.Row="3">
+                <DockPanel.Resources>
+                    <Style TargetType="TextBox" BasedOn="{StaticResource ErrorTooltip}"/>
+                </DockPanel.Resources>
+                
+                <TextBlock Text="Wound Threshold: "/>
+                <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <TextBox MinWidth="50" TextAlignment="Right">
+                        <TextBox.Text>
+                            <Binding Path="BaseWoundThreshold" Mode="OneWayToSource" TargetNullValue="10">
+                                <Binding.ValidationRules>
+                                    <c:IntegerRule Max="20" ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <TextBlock Text=" + Brawn" Name="_plusBrawn"/>
+                </StackPanel>
+            </DockPanel>
+            <!--#endregion-->
+
+            <StackPanel Grid.Row="5">
+                <!--#region Racial Skills-->
+                <DockPanel>
+                    <TextBlock Margin="0,3,0,0" Padding="6,0"
+                                Visibility="{Binding ElementName=RacialSkillsControl, Path=Visibility}"
+                                FontSize="11"
+                                Text="Racial Skills:"/>
+                    <Button HorizontalAlignment="Right"
+                            DockPanel.Dock="Right"
+                            FontSize="11" MinWidth="40" MaxWidth="50" x:Name="NewSkillButton" Click="NewSkillButton_Click">
+                        New
+                    </Button>
+                </DockPanel>
+                <!--Visibility="{Binding ElementName=RacialSkillsPanel, Path=Children.Count, Converter={StaticResource HideWhenZeroConverter}}"-->
+                <Border
+                        Padding="5,2" CornerRadius="5" BorderBrush="#777" BorderThickness="1">
+                    <StackPanel x:Name="RacialSkillsPanel">
+                        
+                    </StackPanel>
+                </Border>
+                <!--#endregion-->
+                <!--#region Racial Abilities-->
+                <TextBlock Margin="0,3,0,0" Padding="6,0" 
+                            Visibility="{Binding ElementName=RacialAbilitiesControl, Path=Visibility}"
+                            FontSize="11"
+                            Text="Racial Abilities:"/>
+                <Border Padding="5,2" CornerRadius="5" BorderBrush="#777" BorderThickness="1">
+                    <ItemsControl Name="RacialAbilitiesControl"
+                                    ItemsSource="{Binding RacialAbilities}"
+                                    HorizontalContentAlignment="Stretch"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                    >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Rectangle Height="1" Fill="#777" Margin="5,0" Name="LineSeparator"/>
+                                    <TextBlock Text="{Binding Path=.}" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed" TargetName="LineSeparator"/>
+                                    </Trigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+                <!--#endregion-->
+            </StackPanel>
+        </Grid>
+    </Border>
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Margin="0,5,0,10" Text="Creating Custom Species/Archetype..."/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition MinWidth="200"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+            </Grid.Resources>
+            <DockPanel Grid.ColumnSpan="2">
+                <WrapPanel DockPanel.Dock="Left" Name="_nameWrap" Orientation="Horizontal" Margin="0,0,10,0">
+                    <TextBlock Margin="0,0,10,0" MinWidth="150"
+                               Text="Species/Archetype Name:"/>
+                    
+                    <TextBox Width="200" MinWidth="150" Grid.Column="1" x:Name="SpeciesName">
+                        <TextBox.Text>
+                            <Binding Mode="OneWayToSource" Path="Name">
+                                <Binding.ValidationRules>
+                                    <c:TextValidationRule MaxLength="20" ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </WrapPanel>
+                <WrapPanel DockPanel.Dock="Right" Width="300" Orientation="Horizontal">
+                    <TextBlock Margin="0,0,10,0"
+                               Text="Starting Experience"/>
+                    
+                    <TextBox Width="200">
+                        
+                    </TextBox>
+                </WrapPanel>
+            </DockPanel>
+            
+            <TextBlock Grid.Row="1" Text="Characteristics"/>
+            <WrapPanel Grid.Row="1" Grid.Column="1"
+                       HorizontalAlignment="Center">
+                <WrapPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="0,5"/>
+                        <Setter Property="FontSize" Value="13"/>
+                    </Style>
+                    
+                    <Style TargetType="TextBox">
+                        <Setter Property="Height" Value="40"/>
+                        <Setter Property="Width" Value="40"/>
+                        <Setter Property="Margin" Value="10,0"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="TextAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+                        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
+
+                        <EventSetter Event="GotFocus" Handler="Characteristic_GotFocus"/>
+                        <EventSetter Event="LostFocus" Handler="Characteristic_LostFocus"/>
+                        <EventSetter Event="PreviewLostKeyboardFocus" Handler="TextBox_PreviewLostKeyboardFocus"/>
+                        <EventSetter Event="GotMouseCapture" Handler="Characteristic_GotMouseCapture"/>
+                        <EventSetter Event="GotKeyboardFocus" Handler="Characteristic_GotKeyboardFocus"/>
+
+                        --><!--<Setter Property="Validation.ErrorTemplate">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Border BorderBrush="Red" BorderThickness="1" CornerRadius="20">
+                                        <AdornedElementPlaceholder />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>--><!--
+                        <Style.Triggers>
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                                <Setter Property="BorderBrush" Value="Red"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+
+                </WrapPanel.Resources>
+
+                --><!--#region Characteristics--><!--
+                <WrapPanel HorizontalAlignment="Left">
+                    <StackPanel DockPanel.Dock="Left">
+                        <TextBlock Text="Brawn"/>
+                        <TextBox x:Name="BrawnBox">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="20"/>
+                                </Style>
+                            </TextBox.Resources>
+                            <TextBox.Text>
+                                <Binding Path="Brawn"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Left">
+                        <TextBlock Text="Agility"/>
+                        <TextBox x:Name="AgilityBox">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="20"/>
+                                </Style>
+                            </TextBox.Resources>
+                            <TextBox.Text>
+                                <Binding Path="Agility"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Left">
+                        <TextBlock Text="Intellect"/>
+                        <TextBox x:Name="IntellectBox">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="20"/>
+                                </Style>
+                            </TextBox.Resources>
+                            <TextBox.Text>
+                                <Binding Path="Intellect"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </StackPanel>
+                </WrapPanel>
+                
+                --><!--Group 2--><!--
+                <WrapPanel HorizontalAlignment="Right">
+                    <StackPanel DockPanel.Dock="Right">
+                        <TextBlock Text="Cunning"/>
+                        <TextBox x:Name="CunningBox">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="20"/>
+                                </Style>
+                            </TextBox.Resources>
+                            <TextBox.Text>
+                                <Binding Path="Cunning"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Right">
+                        <TextBlock Text="Willpower"/>
+                        <TextBox x:Name="WillpowerBox">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="20"/>
+                                </Style>
+                            </TextBox.Resources>
+                            <TextBox.Text>
+                                <Binding Path="Willpower"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Right">
+                        <TextBlock Text="Presence"/>
+                        <TextBox x:Name="PresenceBox">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="20"/>
+                                </Style>
+                            </TextBox.Resources>
+                            <TextBox.Text>
+                                <Binding Path="Presence"
+                                         Mode="TwoWay"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <c:CharacteristicValidationRule ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </StackPanel>
+                </WrapPanel>
+            </WrapPanel>
+            --><!--#endregion--><!--
+            <TextBlock Grid.Row="2" Text="Wounds"/>
+        </Grid>
+        <Button x:Name="CreateButton" Grid.Row="2"
+                HorizontalAlignment="Right" MaxWidth="100"
+                Margin="10,5" Padding="5,2" Click="CreateButton_Click"
+                IsDefault="True" IsEnabled="False">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="2"/>
+                </Style>
+            </Button.Resources>
+            <TextBlock FontSize="14" Text="Create"/>
+        </Button>
+    </Grid>-->
+</Page>

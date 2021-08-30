@@ -1,0 +1,142 @@
+﻿<Window x:Class="WpfGenesys.Views.Home.Window2"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfGenesys.Views.Home"
+        xmlns:ctrl="clr-namespace:WpfGenesys.Controls"
+        mc:Ignorable="d"
+        Title="Genesys Character Manager"
+        Height="450" Width="800"
+        >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <!--
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="20"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Genesys Character Sheet" Margin="5,0" VerticalAlignment="Center"/>
+            <Button x:Name="Minimize" Grid.Column="1">
+                <Canvas>
+                    <Line X1="-5" X2="5" Stroke="Black"/>
+                </Canvas>
+            </Button>
+            <Button x:Name="Maximize" Grid.Column="2">
+                <Canvas>
+                    <Rectangle Margin="-5,-5,0,0" Width="10" Height="10" Stroke="Black"/>
+                    <Rectangle x:Name="hi" Visibility="Hidden" Margin="-5,0,0,0" Width="5" Height="5" Stroke="Black"/>
+                </Canvas>
+            </Button>
+            <Button x:Name="Close" Grid.Column="3" Height="20" VerticalAlignment="Top" Click="Close_Click">
+                <Canvas>
+                    <Line X1="-5" Y1="-5" X2="5" Y2="5" Stroke="Black"/>
+                    <Line X1="-5" Y1="5" X2="5" Y2="-5" Stroke="Black"/>
+                </Canvas>
+            </Button>
+        </Grid>-->
+        <Grid Panel.ZIndex="1" x:Name="HomeGrid" Grid.RowSpan="3" Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="4*" MinWidth="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="4*" MinWidth="50"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="{Binding ElementName=Create, Path=ActualWidth}"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button x:Name="Create" Grid.Row="1" Grid.Column="1" BorderBrush="Black" BorderThickness="1" Click="Create_Click">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Create Character"/>
+            </Button>
+            <Button x:Name="Load" Grid.Row="1" Grid.Column="3" BorderBrush="Black" BorderThickness="1" Click="Load_Click">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Load Character"/>
+            </Button>
+        </Grid>
+
+        <Button MinWidth="100" HorizontalAlignment="Left">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter/>
+                </ControlTemplate>
+            </Button.Template>
+            <StackPanel Orientation="Horizontal">
+                <Path Margin="8,5" Stroke="Black" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" VerticalAlignment="Center"
+                                  Data="m 0,0 5,5 -5,5"
+                                  RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <RotateTransform Angle="180"/>
+                    </Path.RenderTransform>
+                </Path>
+                <TextBlock Margin="2,0,8,0" Text="Back to home" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+
+        <Frame Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+
+        <DockPanel Grid.Row="2" x:Name="Navigation" Margin="5">
+            <Button DockPanel.Dock="Left"
+                            x:Name="ButtonLeft" Click="ButtonLeft_Click">
+                <Button.Resources>
+                    <Style TargetType="Border" BasedOn="{StaticResource RoundButton}"/>
+                </Button.Resources>
+                <Viewbox Margin="15">
+                    <Path Stroke="Black" StrokeThickness="5" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                  Data="m 0,0 m 5,2.5 10,10 -10,10"
+                                  RenderTransformOrigin="0.5,0.5">
+                        <Path.RenderTransform>
+                            <RotateTransform Angle="180"/>
+                        </Path.RenderTransform>
+                    </Path>
+                </Viewbox>
+            </Button>
+            <Button DockPanel.Dock="Right"
+                            x:Name="ButtonRight" Click="ButtonRight_Click">
+                <Button.Resources>
+                    <Style TargetType="Border" BasedOn="{StaticResource RoundButton}"/>
+                </Button.Resources>
+                <Viewbox Margin="15">
+                    <Path Stroke="Black" StrokeThickness="5" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                  Data="m 0,0 m 5,2.5 10,10 -10,10"/>
+                </Viewbox>
+            </Button>
+            <StackPanel x:Name="PageButtons" Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel.Resources>
+                    <AlternationConverter x:Key="MarginConverter">
+                        <ThicknessAnimation To="15,-5" Duration="1" From="5,0"/>
+                    </AlternationConverter>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="Margin" Value="5,0"/>
+
+                    </Style>
+                </StackPanel.Resources>
+            </StackPanel>
+        </DockPanel>
+
+        <!--<ctrl:NavigationControl Grid.Row="1" Height="60" Visibility="Hidden"/>-->
+    </Grid>
+</Window>
